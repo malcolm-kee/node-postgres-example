@@ -12,6 +12,17 @@ productController.get('/', basicAuthMiddleware, (req, res, next) => {
 });
 
 productController.get('/:id', (req, res, next) => {
+  if (!req.headers.authorization) {
+    return res.status(401).setHeader('WWW-Authenticate', 'Basic').end();
+  }
+
+  const [, rawCredentials] = req.headers.authorization.split(' ');
+  const [username, password] = decodeBase64(rawCredentials).split(':');
+
+  if (username !== 'i-am-peanut' || password !== 'kaching') {
+    return res.status(401).setHeader('WWW-Authenticate', 'Basic').end();
+  }
+
   productService
     .getProduct(req.params.id)
     .then((product) => {
@@ -24,5 +35,8 @@ productController.get('/:id', (req, res, next) => {
     })
     .catch((err) => next(err));
 });
+
+const decodeBase64 = (base64String) =>
+  Buffer.from(base64String, 'base64').toString('ascii');
 
 module.exports = productController;
