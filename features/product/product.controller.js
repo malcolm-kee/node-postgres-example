@@ -3,7 +3,11 @@ const productService = require('./product.service');
 
 const productController = express.Router();
 
-productController.get('/', (_, res, next) => {
+productController.get('/', (req, res, next) => {
+  if (!req.headers.authorization) {
+    return res.status(401).setHeader('WWW-Authenticate', 'Basic').end();
+  }
+
   productService
     .getProducts()
     .then((products) => res.json(products))
