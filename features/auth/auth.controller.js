@@ -23,7 +23,10 @@ authController.post('/login', (req, res, next) => {
           message: 'Incorrect username/password.',
         });
       }
-      return res.status(200).json(user);
+      return res
+        .status(200)
+        .setHeader('Set-Cookie', `email=${user.email}; Path=/`)
+        .json(user);
     })
     .catch((err) => next(err));
 });
