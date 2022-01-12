@@ -24,3 +24,19 @@ exports.basicAuthMiddleware = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
+
+exports.cookieAuthMiddleware = (req, res, next) => {
+  const cookiePairs = (req.headers.cookie || '')
+    .split('; ')
+    .map((str) => str.split('='));
+
+  const userNamePair = cookiePairs.find((pair) => pair[0] === 'username');
+
+  if (!userNamePair || !userNamePair[1]) {
+    return res.status(401).json({
+      message: 'Please login',
+    });
+  }
+
+  next();
+};
