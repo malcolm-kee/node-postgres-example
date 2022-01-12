@@ -25,7 +25,10 @@ authController.post('/login', (req, res, next) => {
       }
       return res
         .status(200)
-        .setHeader('Set-Cookie', `email=${user.email}; Path=/`)
+        .setHeader('Set-Cookie', [
+          `email=${user.email}; Path=/`,
+          `username=${user.username}; Path=/`,
+        ])
         .json(user);
     })
     .catch((err) => next(err));
@@ -57,10 +60,10 @@ authController.post('/register', (req, res, next) => {
 authController.post('/logout', (_, res) =>
   res
     .status(200)
-    .setHeader(
-      'Set-Cookie',
-      `email=none; Path=/; Expires=${new Date(0).toUTCString()}`
-    )
+    .setHeader('Set-Cookie', [
+      `email=none; Path=/; Expires=${new Date(0).toUTCString()}`,
+      `username=none; Path=/; Expires=${new Date(0).toUTCString()}`,
+    ])
     .end()
 );
 
