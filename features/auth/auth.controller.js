@@ -54,6 +54,14 @@ authController.post('/register', (req, res, next) => {
     .catch((err) => next(err));
 });
 
-authController.post('/logout', (_, res) => res.status(501).end());
+authController.post('/logout', (_, res) =>
+  res
+    .status(200)
+    .setHeader(
+      'Set-Cookie',
+      `email=none; Path=/; Expires=${new Date(0).toUTCString()}`
+    )
+    .end()
+);
 
 module.exports = authController;
