@@ -1,5 +1,6 @@
 const express = require('express');
 const authService = require('./auth.service');
+const { createSession } = require('../../session');
 
 const authController = express.Router();
 
@@ -23,12 +24,12 @@ authController.post('/login', (req, res, next) => {
           message: 'Incorrect username/password.',
         });
       }
+
+      const sessionId = createSession(user);
+
       return res
         .status(200)
-        .setHeader('Set-Cookie', [
-          `email=${user.email}; Path=/`,
-          `username=${user.username}; Path=/`,
-        ])
+        .setHeader('Set-Cookie', [`sessionId=${sessionId}; Path=/`])
         .json(user);
     })
     .catch((err) => next(err));
@@ -61,8 +62,7 @@ authController.post('/logout', (_, res) =>
   res
     .status(200)
     .setHeader('Set-Cookie', [
-      `email=none; Path=/; Expires=${new Date(0).toUTCString()}`,
-      `username=none; Path=/; Expires=${new Date(0).toUTCString()}`,
+      `sessionId=none; Path=/; Expires=${new Date(0).toUTCString()}`,
     ])
     .end()
 );

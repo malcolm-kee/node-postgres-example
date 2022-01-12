@@ -5,6 +5,8 @@ const productService = require('./product.service');
 const productController = express.Router();
 
 productController.get('/', cookieAuthMiddleware, (req, res, next) => {
+  console.log('session', req.session);
+
   productService
     .getProducts()
     .then((products) => res.json(products))
