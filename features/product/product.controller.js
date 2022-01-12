@@ -4,8 +4,18 @@ const productService = require('./product.service');
 
 const productController = express.Router();
 
-productController.get('/', basicAuthMiddleware, (req, res, next) => {
-  console.log('cookie', req.headers.cookie);
+productController.get('/', (req, res, next) => {
+  const cookiePairs = (req.headers.cookie || '')
+    .split('; ')
+    .map((str) => str.split('='));
+
+  const userNamePair = cookiePairs.find((pair) => pair[0] === 'username');
+
+  if (!userNamePair || !userNamePair[1]) {
+    return res.status(401).json({
+      message: 'Please login',
+    });
+  }
 
   productService
     .getProducts()
