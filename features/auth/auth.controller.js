@@ -51,4 +51,6 @@ authController.post('/register', (req, res, next) => {
     .catch((err) => next(err));
 });
 
+authController.post('/logout', (_, res) => res.status(501).end());
+
 module.exports = authController;

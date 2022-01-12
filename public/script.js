@@ -28,9 +28,21 @@ function createAuthService() {
     }).then((res) => res.json());
   }
 
+  function logout() {
+    return fetch('/auth/logout', {
+      method: 'POST',
+    }).then((res) => {
+      if (res.ok) {
+        return {};
+      }
+      throw new Error('Fail');
+    });
+  }
+
   return {
     login,
     register,
+    logout,
   };
 }
 
@@ -52,6 +64,7 @@ function createProductService() {
 (function main({
   $loginForm,
   $registerForm,
+  $logoutBtn,
   $getProductsBtn,
   $getOneProductForm,
   $output,
@@ -65,6 +78,13 @@ function createProductService() {
   $getProductsBtn.addEventListener('click', () => {
     productService.getProducts().then(showResult);
   });
+
+  $logoutBtn.addEventListener('click', () =>
+    authService
+      .logout()
+      .then(() => ($output.innerHTML = 'Success'))
+      .catch(() => ($output.innerHTML = 'Fail'))
+  );
 
   $getOneProductForm.addEventListener('submit', (ev) => {
     ev.preventDefault();
@@ -92,6 +112,7 @@ function createProductService() {
   authService: createAuthService(),
   productService: createProductService(),
   $loginForm: document.querySelector('#login-form'),
+  $logoutBtn: document.querySelector('#logout-btn'),
   $output: document.querySelector('#output'),
   $registerForm: document.querySelector('#register-form'),
   $getProductsBtn: document.querySelector('#get-products-btn'),
