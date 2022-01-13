@@ -3,7 +3,7 @@
  *
  * Example:
  *
- * omit({ a: 'A', b: 'B' }, ['a']); // -> { a: 'A' }
+ * pick({ a: 'A', b: 'B' }, ['a']); // -> { a: 'A' }
  */
 function pick(object, keysToPick) {
   const result = {};
