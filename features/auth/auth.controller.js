@@ -1,5 +1,6 @@
 const express = require('express');
 const authService = require('./auth.service');
+const jwt = require('./jwt');
 
 const authController = express.Router();
 
@@ -24,9 +25,7 @@ authController.post('/login', (req, res, next) => {
         });
       }
 
-      req.session.user = user;
-
-      return res.status(200).json(user);
+      return res.status(200).json({ access_token: jwt.sign(user) });
     })
     .catch((err) => next(err));
 });
