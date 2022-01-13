@@ -1,6 +1,5 @@
 const express = require('express');
 const authService = require('./auth.service');
-const { createSession } = require('../../session');
 
 const authController = express.Router();
 
@@ -25,12 +24,9 @@ authController.post('/login', (req, res, next) => {
         });
       }
 
-      const sessionId = createSession(user);
+      req.session.user = user;
 
-      return res
-        .status(200)
-        .setHeader('Set-Cookie', [`sessionId=${sessionId}; Path=/`])
-        .json(user);
+      return res.status(200).json(user);
     })
     .catch((err) => next(err));
 });
@@ -58,13 +54,13 @@ authController.post('/register', (req, res, next) => {
     .catch((err) => next(err));
 });
 
-authController.post('/logout', (_, res) =>
-  res
-    .status(200)
-    .setHeader('Set-Cookie', [
-      `sessionId=none; Path=/; Expires=${new Date(0).toUTCString()}`,
-    ])
-    .end()
-);
+authController.post('/logout', (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return next(err);
+    }
+    return res.status(200).end();
+  });
+});
 
 module.exports = authController;

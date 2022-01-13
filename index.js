@@ -1,6 +1,8 @@
 require('dotenv').config();
 
 const express = require('express');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const authController = require('./features/auth/auth.controller');
 const productController = require('./features/product/product.controller');
 
@@ -8,6 +10,14 @@ const app = express();
 
 app.use(express.json());
 app.use(express.static('public'));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    saveUninitialized: false,
+    resave: false,
+  })
+);
+app.use(cookieParser());
 
 app.use('/auth', authController);
 app.use('/product', productController);

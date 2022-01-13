@@ -1,5 +1,4 @@
 const authService = require('./auth.service');
-const { getSession } = require('../../session');
 
 exports.basicAuthMiddleware = (req, res, next) => {
   if (!req.headers.authorization) {
@@ -27,23 +26,11 @@ exports.basicAuthMiddleware = (req, res, next) => {
 };
 
 exports.cookieAuthMiddleware = (req, res, next) => {
-  const cookiePairs = (req.headers.cookie || '')
-    .split('; ')
-    .map((str) => str.split('='));
-
-  const sessionValuePair = cookiePairs.find((pair) => pair[0] === 'sessionId');
-
-  if (
-    !sessionValuePair ||
-    !sessionValuePair[1] ||
-    !getSession(sessionValuePair[1])
-  ) {
+  if (!req.session.user) {
     return res.status(401).json({
       message: 'Please login',
     });
   }
-
-  req.session = getSession(sessionValuePair[1]);
 
   next();
 };
