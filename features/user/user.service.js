@@ -7,10 +7,10 @@ exports.createUser = (user) => {
   );
 };
 
-exports.getUser = ({ username, password }) => {
+exports.getUser = ({ username }) => {
   return query(
-    `SELECT username, email FROM end_users WHERE username = $1 AND password = $2`,
-    [username, password]
+    `SELECT username, email, password FROM end_users WHERE username = $1`,
+    [username]
   ).then((result) => {
     return result.rows[0];
   });
