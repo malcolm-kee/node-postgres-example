@@ -5,6 +5,50 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const authController = require('./features/auth/auth.controller');
 const productController = require('./features/product/product.controller');
+const jwt = require('jsonwebtoken');
+
+const secret = process.env.JWT_SECRET;
+
+const tokenGeneratedByUs = jwt.sign(
+  {
+    userName: 'malcolm-kee',
+    permissions: ['get-product'],
+  },
+  secret
+);
+
+const tokenGeneratedByOthers = jwt.sign(
+  {
+    userName: 'malcolm-kee',
+    permissions: ['get-product', 'create-product'],
+  },
+  'theirSecretKey'
+);
+
+try {
+  const verifyResult = jwt.verify(tokenGeneratedByUs, secret);
+
+  console.log({ verifyResult });
+} catch (err) {
+  console.error('Fail');
+  console.log(err);
+}
+
+try {
+  const verifyResult2 = jwt.verify(tokenGeneratedByOthers, secret);
+  console.log({ verifyResult2 });
+} catch (err) {
+  console.error('second fail');
+  console.log(err);
+}
+
+const decodeResult1 = jwt.decode(tokenGeneratedByUs);
+const decodeResult2 = jwt.decode(tokenGeneratedByOthers);
+
+console.log({
+  decodeResult1,
+  decodeResult2,
+});
 
 const app = express();
 
