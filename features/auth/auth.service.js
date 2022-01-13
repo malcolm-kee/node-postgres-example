@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const userService = require('../user/user.service');
+const omit = require('../../utility/omit');
 
 exports.register = ({ username, password, email }) =>
   bcrypt.hash(password, 3).then((hashedPassword) =>
@@ -16,11 +17,11 @@ exports.login = ({ username, password }) =>
       return undefined;
     }
 
-    const { password: storedPw, ...userData } = storedUser;
-
     return bcrypt
-      .compare(password, storedPw)
-      .then((isMatch) => (isMatch ? userData : undefined));
+      .compare(password, storedUser.password)
+      .then((isMatch) =>
+        isMatch ? omit(storedUser, ['password']) : undefined
+      );
   });
 
 exports.isValid = ({ username, password }) =>
