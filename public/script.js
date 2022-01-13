@@ -47,8 +47,13 @@ function createAuthService() {
 }
 
 function createProductService() {
-  function getProducts() {
-    return fetch('/product').then((res) => res.json());
+  /**
+   *
+   * @param {RequestInit} [requestInit]
+   * @returns
+   */
+  function getProducts(requestInit) {
+    return fetch('/product', requestInit).then((res) => res.json());
   }
 
   function getOneProduct(id) {
@@ -66,6 +71,7 @@ function createProductService() {
   $registerForm,
   $logoutBtn,
   $getProductsBtn,
+  $getProductsWithCustomHeaderForm,
   $getOneProductForm,
   $output,
   authService,
@@ -108,6 +114,24 @@ function createProductService() {
     const email = $registerForm.email.value;
     authService.register(username, password, email).then(showResult);
   });
+
+  $getProductsWithCustomHeaderForm.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    const Authorization =
+      $getProductsWithCustomHeaderForm.authorizationHeader.value;
+
+    productService
+      .getProducts(
+        Authorization
+          ? {
+              headers: {
+                Authorization,
+              },
+            }
+          : undefined
+      )
+      .then(showResult);
+  });
 })({
   authService: createAuthService(),
   productService: createProductService(),
@@ -117,4 +141,7 @@ function createProductService() {
   $registerForm: document.querySelector('#register-form'),
   $getProductsBtn: document.querySelector('#get-products-btn'),
   $getOneProductForm: document.querySelector('#get-product-form'),
+  $getProductsWithCustomHeaderForm: document.querySelector(
+    '#get-products-with-custom-header-form'
+  ),
 });

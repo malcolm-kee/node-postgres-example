@@ -60,6 +60,6 @@ button {
 
 .main-section {
   display: grid;
-  grid-template-columns: minmax(300px, 1fr) 500px;
+  grid-template-columns: minmax(300px, 400px) minmax(500px, 1fr);
   gap: 20px;
 }
