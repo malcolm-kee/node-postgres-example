@@ -1,4 +1,5 @@
 const authService = require('./auth.service');
+const jwt = require('./jwt');
 
 exports.basicAuthMiddleware = (req, res, next) => {
   if (!req.headers.authorization) {
@@ -33,4 +34,21 @@ exports.cookieAuthMiddleware = (req, res, next) => {
   }
 
   next();
+};
+
+exports.jwtAuthMiddleware = (req, res, next) => {
+  const token =
+    req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+  if (token) {
+    try {
+      jwt.verify(token);
+
+      return next();
+    } catch (err) {}
+  }
+
+  return res.status(401).json({
+    message: 'Please login',
+  });
 };

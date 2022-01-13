@@ -1,28 +1,14 @@
 const express = require('express');
-const { cookieAuthMiddleware } = require('../auth/auth.middleware');
+const { jwtAuthMiddleware } = require('../auth/auth.middleware');
 const productService = require('./product.service');
-const jwt = require('../auth/jwt');
 
 const productController = express.Router();
 
-productController.get('/', (req, res, next) => {
-  const token =
-    req.headers.authorization && req.headers.authorization.split(' ')[1];
-
-  if (token) {
-    try {
-      jwt.verify(token);
-
-      return productService
-        .getProducts()
-        .then((products) => res.json(products))
-        .catch((err) => next(err));
-    } catch (err) {}
-  }
-
-  return res.status(401).json({
-    message: 'Please login',
-  });
+productController.get('/', jwtAuthMiddleware, (req, res, next) => {
+  productService
+    .getProducts()
+    .then((products) => res.json(products))
+    .catch((err) => next(err));
 });
 
 productController.get('/:id', (req, res, next) => {
