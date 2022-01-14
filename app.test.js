@@ -17,11 +17,15 @@ test('it returns 404 for unmatch path', async () => {
     .then((result) => result.text);
 
   expect(defaultResult.includes('Page Not Found')).toBe(true);
+});
 
-  const jsonResult = await agent
-    .get('/non-exi3t')
-    .set('Accept', 'application/json')
+test('it returns result for health check', async () => {
+  const app = createApp();
+  const agent = supertest(app);
+
+  const healthCheckResult = await agent
+    .get('/health-check')
     .then((result) => result.body);
 
-  expect(jsonResult).toStrictEqual({ error: 'Not found' });
+  expect(healthCheckResult).toStrictEqual({ ok: true });
 });
