@@ -45,3 +45,16 @@ test('get movies', async () => {
     language: 'EN',
   });
 });
+
+test('get movie details', async () => {
+  const app = createApp();
+  const agent = supertest(app);
+
+  const movie = await agent.get('/movie/1').then((result) => result.body);
+
+  expect(movie).toStrictEqual({
+    id: 1,
+    title: 'Sing 2',
+    language: 'EN',
+  });
+});
