@@ -1,5 +1,5 @@
 CREATE TABLE end_users (
-    username text,
+    username text PRIMARY KEY,
     password text,
     email text
 );
@@ -9,7 +9,7 @@ VALUES ('malcolm-kee', '123456', 'malcolm.keeweeesiong@gmail.com'),
     ('stanley', 'password', 'stanley@test.com');
 
 CREATE TABLE products (
-    id bigserial,
+    id bigserial PRIMARY KEY,
     name text NOT NULL,
     price numeric(10, 2)
 );
@@ -23,3 +23,17 @@ VALUES ('Nike Fast Shoes', 350),
     ('Think and Grow Rich', 40),
     ('Badminton Racket', 100),
     ('Hup Seng Biscuit', 700);
+
+CREATE TABLE movies (
+	id bigserial PRIMARY KEY,
+	title text,
+	language text
+);
+
+INSERT INTO movies(title, language) 
+VALUES ('Sing 2', 'EN'),
+    ('Spider-Man: No Way Home', 'EN'),
+    ('Demon Slayer', 'JP'),
+    ('Parasite', 'KO'),
+    ('The Hows of Us', 'TL'),
+    ('Ultraman: A New Power of Singapore', 'JP');

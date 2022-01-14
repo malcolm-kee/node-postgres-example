@@ -66,6 +66,26 @@ function createProductService() {
   };
 }
 
+function createMovieService() {
+  /**
+   *
+   * @param {RequestInit} [requestInit]
+   * @returns
+   */
+  function getMovies(requestInit) {
+    return fetch('/movie', requestInit).then((res) => res.json());
+  }
+
+  function getOneMovie(id) {
+    return fetch(`/movie/${id}`).then((res) => res.json());
+  }
+
+  return {
+    getMovies,
+    getOneMovie,
+  };
+}
+
 (function main({
   $loginForm,
   $registerForm,
@@ -74,9 +94,12 @@ function createProductService() {
   $getProductsWithCustomHeaderForm,
   $getOneProductForm,
   $healthCheckBtn,
+  $getMoviesBtn,
+  $getOneMovieForm,
   $output,
   authService,
   productService,
+  movieService,
 }) {
   function showResult(object) {
     $output.innerHTML = JSON.stringify(object, null, 2);
@@ -139,9 +162,22 @@ function createProductService() {
       .then((res) => res.json())
       .then(showResult);
   });
+
+  $getMoviesBtn.addEventListener('click', () => {
+    movieService.getMovies().then(showResult);
+  });
+
+  $getOneMovieForm.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+
+    const id = $getOneMovieForm.movieId.value;
+
+    movieService.getOneMovie(id).then(showResult);
+  });
 })({
   authService: createAuthService(),
   productService: createProductService(),
+  movieService: createMovieService(),
   $loginForm: document.querySelector('#login-form'),
   $logoutBtn: document.querySelector('#logout-btn'),
   $output: document.querySelector('#output'),
@@ -152,4 +188,6 @@ function createProductService() {
     '#get-products-with-custom-header-form'
   ),
   $healthCheckBtn: document.querySelector('#health-check-btn'),
+  $getMoviesBtn: document.querySelector('#get-movies-btn'),
+  $getOneMovieForm: document.querySelector('#get-movie-form'),
 });

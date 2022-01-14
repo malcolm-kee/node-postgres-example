@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const authController = require('./features/auth/auth.controller');
 const productController = require('./features/product/product.controller');
+const movieController = require('./features/movie/movie.controller');
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.static('public'));
 
 app.use('/auth', authController);
 app.use('/product', productController);
+app.use('/movie', movieController);
 
 app.get('/health-check', (_, res) =>
   res.json({
