@@ -29,3 +29,12 @@ test('it returns result for health check', async () => {
 
   expect(healthCheckResult).toStrictEqual({ ok: true });
 });
+
+test('get movies', async () => {
+  const app = createApp();
+  const agent = supertest(app);
+
+  const movies = await agent.get('/movie').then((result) => result.text);
+
+  console.log(movies);
+});
