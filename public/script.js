@@ -73,6 +73,7 @@ function createProductService() {
   $getProductsBtn,
   $getProductsWithCustomHeaderForm,
   $getOneProductForm,
+  $healthCheckBtn,
   $output,
   authService,
   productService,
@@ -132,6 +133,12 @@ function createProductService() {
       )
       .then(showResult);
   });
+
+  $healthCheckBtn.addEventListener('click', () => {
+    fetch('/health-check')
+      .then((res) => res.json())
+      .then(showResult);
+  });
 })({
   authService: createAuthService(),
   productService: createProductService(),
@@ -144,4 +151,5 @@ function createProductService() {
   $getProductsWithCustomHeaderForm: document.querySelector(
     '#get-products-with-custom-header-form'
   ),
+  $healthCheckBtn: document.querySelector('#health-check-btn'),
 });

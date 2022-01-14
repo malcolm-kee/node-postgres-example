@@ -12,6 +12,12 @@ app.use(express.static('public'));
 app.use('/auth', authController);
 app.use('/product', productController);
 
+app.get('/health-check', (_, res) =>
+  res.json({
+    ok: true,
+  })
+);
+
 app.all('*', (req, res) => {
   if (req.headers.accept === 'application/json') {
     return res.status(404).json({
