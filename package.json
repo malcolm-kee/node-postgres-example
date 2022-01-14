@@ -25,6 +25,7 @@
   "devDependencies": {
     "jest": "^27.4.7",
     "nodemon": "^2.0.15",
+    "pg-mem": "^2.2.0",
     "prettier": "^2.5.1",
     "supertest": "^6.2.1"
   }

@@ -1,18 +1,7 @@
 const supertest = require('supertest');
 const createApp = require('./app');
 
-jest.mock('./db', () => ({
-  query: () =>
-    Promise.resolve({
-      rows: [
-        {
-          id: '1',
-          title: 'Spiderman',
-          language: 'EN',
-        },
-      ],
-    }),
-}));
+jest.mock('./db');
 
 test('it is defined', () => {
   const app = createApp();
@@ -49,10 +38,10 @@ test('get movies', async () => {
 
   const movies = await agent.get('/movie').then((result) => result.body);
 
-  expect(movies).toHaveLength(1);
+  expect(movies).toHaveLength(6);
   expect(movies[0]).toStrictEqual({
-    id: '1',
-    title: 'Spiderman',
+    id: 1,
+    title: 'Sing 2',
     language: 'EN',
   });
 });
